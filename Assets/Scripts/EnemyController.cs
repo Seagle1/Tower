@@ -9,6 +9,7 @@ public class EnemyController : MonoBehaviour
    private Transform tower;
    private int currentHealth;
    private bool isActive;
+   private bool isDamagingTower = false;
 
    public void Initialize(EnemySO data, Transform towerTransform)
    {
@@ -52,23 +53,34 @@ public class EnemyController : MonoBehaviour
    private void FixedUpdate()
    {
       float detectionRadius = 0.5f;
-      float maxDistance = 0.5f;
-      RaycastHit hit;
-      if (Physics.SphereCast(transform.position, detectionRadius, Vector3.forward, out hit, maxDistance))
+      Collider[] hits = Physics.OverlapSphere(transform.position, detectionRadius);
+      foreach (var hit in hits)
       {
-         if (hit.collider.gameObject == tower.gameObject)
+         if (hit.gameObject == tower.gameObject && !isDamagingTower)
          {
+            Debug.Log("Starting DamageTower coroutine");
             StartCoroutine(DamageTower());
+            break; 
          }
       }
    }
 
+
    private IEnumerator DamageTower()
    {
+      isDamagingTower = true;
       while (true)
       {
+         Debug.Log("Applying damage to tower");
          Tower.Instance.TakeDamage(enemyData.damage);
          yield return new WaitForSeconds(1f);
       }
+   }
+
+   private void OnDisable()
+   {
+      Debug.Log("Stopping DamageTower coroutine");
+      isDamagingTower = false;
+      StopCoroutine(DamageTower());
    }
 }
