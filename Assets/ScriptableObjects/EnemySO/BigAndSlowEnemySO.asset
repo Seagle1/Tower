@@ -16,4 +16,4 @@ MonoBehaviour:
   health: 100
   enemyPrefab: {fileID: 9220332327216832858, guid: 2fb4d282c37ebbc43b7509a85463795d,
     type: 3}
-  damage: 20
+  damage: 5

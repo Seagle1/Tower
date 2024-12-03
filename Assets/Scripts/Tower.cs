@@ -9,6 +9,7 @@ public class Tower : MonoBehaviour
    public static Tower Instance;
    [SerializeField] private int maxHealth = 100;
    [SerializeField] private Image healthBarImage;
+   [SerializeField] private GameObject gameOverPanel;
    private int currentHealth;
 
    private void Awake()
@@ -18,7 +19,9 @@ public class Tower : MonoBehaviour
 
    private void Start()
    {
+      gameOverPanel.SetActive(false);
       currentHealth = maxHealth;
+      SpellManager.Instance.towerTransform = this.transform;
    }
 
    public void TakeDamage(int damage)
@@ -29,6 +32,7 @@ public class Tower : MonoBehaviour
       {
          currentHealth = 0;
          Debug.Log("Tower destroyed! Game Over!");
+         gameOverPanel.SetActive(true);
       }
    }
 
